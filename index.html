@@ -2,71 +2,266 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Click and Drag</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/✅" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    .title {
+      text-align: center;
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      letter-spacing: -1px;
+    }
+
+    .items {
+      height: 600px;
+      padding: 60px;
+      width: 100%;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      white-space: nowrap;
+      user-select: none;
+      cursor: grab;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: scale(0.98);
+      will-change: transform;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      font-size: 0;
+      perspective: 1000px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .items::-webkit-scrollbar {
+      height: 12px;
+    }
+
+    .items::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    .items::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    .items::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.5);
+    }
+
+    .items.active {
+      background: rgba(255,255,255,0.2);
+      cursor: grabbing;
+      transform: scale(1);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+    }
+
+    .item {
+      width: 220px;
+      height: calc(100% - 40px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin: 0 10px;
+      border-radius: 15px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 
+        0 10px 30px rgba(0,0,0,0.3),
+        inset 0 0 0 2px rgba(255,255,255,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .item:hover {
+      transform: translateY(-10px) scale(1.05) !important;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .item:hover::before {
+      opacity: 1;
+    }
+
+    .items.active .item:hover {
+      transform: scaleX(1.31) rotateY(40deg) !important;
+    }
+
+    .item:nth-child(9n+1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .item:nth-child(9n+2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .item:nth-child(9n+3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .item:nth-child(9n+4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+    .item:nth-child(9n+5) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+    .item:nth-child(9n+6) { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+    .item:nth-child(9n+7) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+    .item:nth-child(9n+8) { background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%); }
+    .item:nth-child(9n+9) { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+
+    .item:nth-child(even) { 
+      transform: scaleX(1.31) rotateY(40deg);
+      transform-origin: center;
+    }
+
+    .item:nth-child(odd) { 
+      transform: scaleX(1.31) rotateY(-40deg);
+      transform-origin: center;
+    }
+
+    .instructions {
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .title {
+        font-size: 1.8rem;
+      }
+
+      .items {
+        height: 400px;
+        padding: 30px;
+      }
+
+      .item {
+        width: 160px;
+        font-size: 3rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="items">
-    <div class="item item1">01</div>
-    <div class="item item2">02</div>
-    <div class="item item3">03</div>
-    <div class="item item4">04</div>
-    <div class="item item5">05</div>
-    <div class="item item6">06</div>
-    <div class="item item7">07</div>
-    <div class="item item8">08</div>
-    <div class="item item9">09</div>
-    <div class="item item10">10</div>
-    <div class="item item11">11</div>
-    <div class="item item12">12</div>
-    <div class="item item13">13</div>
-    <div class="item item14">14</div>
-    <div class="item item15">15</div>
-    <div class="item item16">16</div>
-    <div class="item item17">17</div>
-    <div class="item item18">18</div>
-    <div class="item item19">19</div>
-    <div class="item item20">20</div>
-    <div class="item item21">21</div>
-    <div class="item item22">22</div>
-    <div class="item item23">23</div>
-    <div class="item item24">24</div>
-    <div class="item item25">25</div>
+  <div class="container">
+    <h1 class="title">🎨 Interactive 3D Slider</h1>
+    <div class="items">
+      <div class="item">01</div>
+      <div class="item">02</div>
+      <div class="item">03</div>
+      <div class="item">04</div>
+      <div class="item">05</div>
+      <div class="item">06</div>
+      <div class="item">07</div>
+      <div class="item">08</div>
+      <div class="item">09</div>
+      <div class="item">10</div>
+      <div class="item">11</div>
+      <div class="item">12</div>
+      <div class="item">13</div>
+      <div class="item">14</div>
+      <div class="item">15</div>
+      <div class="item">16</div>
+      <div class="item">17</div>
+      <div class="item">18</div>
+      <div class="item">19</div>
+      <div class="item">20</div>
+      <div class="item">21</div>
+      <div class="item">22</div>
+      <div class="item">23</div>
+      <div class="item">24</div>
+      <div class="item">25</div>
+    </div>
+    <p class="instructions">👆 Click and drag to explore • Hover for effects</p>
   </div>
 
-<script>
-  const slider = document.querySelector('.items');
-  let isDown = false;
-  let startX;
-  let scrollLeft;
+  <script>
+    const slider = document.querySelector('.items');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
 
-  slider.addEventListener('mousedown', (e) => {
-    isDown = true;
-    slider.classList.add('active');
-    startX = e.pageX - slider.offsetLeft;
-    scrollLeft = slider.scrollLeft;
-  });
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
 
-  slider.addEventListener('mouseleave', () => {
-    isDown = false;
-    slider.classList.remove('active');
-  });
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
 
-  slider.addEventListener('mouseup', () => {
-    isDown = false;
-    slider.classList.remove('active');
-  });
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
 
-  slider.addEventListener('mousemove', (e) => {
-    if (!isDown) return;  // stop the fn from running
-    e.preventDefault();
-    const x = e.pageX - slider.offsetLeft;
-    const walk = (x - startX) * 3;
-    slider.scrollLeft = scrollLeft - walk;
-  });
+    slider.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2.5;
+      slider.scrollLeft = scrollLeft - walk;
+    });
 
-</script>
+    // Touch support for mobile devices
+    slider.addEventListener('touchstart', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.touches[0].pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
 
-  </body>
+    slider.addEventListener('touchend', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+
+    slider.addEventListener('touchmove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.touches[0].pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2.5;
+      slider.scrollLeft = scrollLeft - walk;
+    });
+  </script>
+</body>
 </html>
